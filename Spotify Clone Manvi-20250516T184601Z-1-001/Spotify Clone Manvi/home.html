@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spotify : Music Player for Everyone</title>
+<link rel="icon" href="logo.png" type="image/png">
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #fff;
+    display: flex;
+    overflow-x: hidden;
+  }
+  /* Library container on left */
+  .library-container {
+    width: 300px;
+    padding: 20px;
+    background-color: #181818;
+    border-radius: 8px;
+    flex-shrink: 0;
+    margin-right: 20px;
+  }
+
+  /* Main content on right */
+  .main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .trending-section,
+  .popular-section {
+    background-color: #181818;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+
+  .trending-section h2,
+  .popular-section h2 {
+    margin-bottom: 15px;
+  }
+
+  /* Wrapper to hold scroll area and arrows */
+  .scroll-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Horizontal scroll containers */
+  .trending-songs,
+  .popular-artists {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    scroll-behavior: smooth;
+    padding: 10px 0;
+    flex-grow: 1;
+  }
+
+  .song-card,
+  .artist-card {
+    background-color: #2a2a2a;
+    padding: 10px;
+    border-radius: 8px;
+    min-width: 150px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .song-card img,
+  .artist-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .song-card h3,
+  .song-card p {
+    margin: 8px 0 0 0;
+  }
+
+  .artist-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
+
+  .song-card:hover,
+  .artist-card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+  }
+
+  /* Scroll arrow buttons */
+  .scroll-btn {
+    background-color: rgba(30, 30, 30, 0.8);
+    border: none;
+    color: white;
+    font-size: 24px;
+    width: 35px;
+    height: 100px;
+    cursor: pointer;
+    border-radius: 4px;
+    user-select: none;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .scroll-btn:hover {
+    background-color: rgba(80, 80, 80, 0.9);
+  }
+
+  .scroll-btn.left {
+    margin-right: 5px;
+  }
+
+  .scroll-btn.right {
+    margin-left: 5px;
+  }
+
+  /* Responsive for smaller screens */
+  @media (max-width: 768px) {
+    body {
+      flex-direction: column;
+    }
+
+    .library-container {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+
+    .main-content {
+      width: 100%;
+    }
+  }
+  .library-container {
+  background-color: #121212;
+  padding: 20px;
+  border-radius: 8px;
+  color: #fff;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.add-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.library-card {
+  background-color: #181818;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.library-card h3 {
+  font-weight: 700;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.library-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.action-btn {
+  background-color: #fff;
+  color: #000;
+  border: none;
+  padding: 8px 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 25px;
+  cursor: pointer;
+  width: fit-content;
+  transition: background-color 0.3s ease;
+}
+
+.action-btn:hover {
+  background-color: #ddd;
+}
+
+.library-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 15px;
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: auto;
+}
+
+.library-footer a {
+  color: #999;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.library-footer a:hover {
+  color: #fff;
+  font-weight: 600;
+}
+
+.language-switch {
+  margin-top: 15px;
+}
+
+.language-btn {
+  background-color: #000;
+  border: none;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.language-btn:hover {
+  background-color: #222;
+}
+
+</style>
+</head>
+<body>
+  <div class="library-container">
+    <div class="library-header">
+      <h2>Your Library</h2>
+      <button class="add-btn">+</button>
+    </div>
+
+    <div class="library-card">
+      <h3>Create your first playlist</h3>
+      <p>It's easy, we'll help you</p>
+      <button class="action-btn">Create playlist</button>
+    </div>
+
+    <div class="library-card">
+      <h3>Let's find some podcasts to follow</h3>
+      <p>We'll keep you updated on new episodes</p>
+      <button class="action-btn">Browse podcasts</button>
+    </div>
+
+    <div class="library-footer">
+      <a href="#">Legal</a>
+      <a href="#">Safety & Privacy Center</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Cookies</a>
+      <a href="#">About Ads</a>
+      <a href="#">Accessibility</a>
+      <div class="language-switch">
+        <button class="language-btn">🌐 English</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="trending-section">
+      <h2>Trending songs</h2>
+      <div class="scroll-wrapper">
+        <button class="scroll-btn left" data-target="trending-songs">&#8249;</button>
+        <div class="trending-songs" id="trending-songs">
+          <div class="song-card">
+            <img src="card1img.jpeg" alt="Song 1" />
+            <h3>Top 50 Global</h3>
+            <p>Karan Aujla, Signature By SB</p>
+          </div>
+          <div class="song-card">
+            <img src="card2img.jpeg" alt="Song 2" />
+            <h3>Jhol - Acoustic</h3>
+            <p>Maanu, Annural Khalid, Abdullah Siddiqui</p>
+          </div>
+          <div class="song-card">
+            <img src="card3img.jpeg" alt="Song 3" />
+            <h3>Saso ki Mala pe</h3>
+            <p>Nusrat Fateh Ali Khan, Sanjoy, Gill Machhrai</p>
+          </div>
+          <div class="song-card">
+            <img src="card6img.jpeg" alt="Song 4" />
+            <h3>Minnalvala</h3>
+            <p>Jakes Bejoy, Sid Sriram, Sithara Krishnakumar</p>
+          </div>
+        </div>
+        <button class="scroll-btn right" data-target="trending-songs">&#8250;</button>
+      </div>
+    </div>
+
+    <div class="popular-section">
+      <h2>Popular artists</h2>
+      <div class="scroll-wrapper">
+        <button class="scroll-btn left" data-target="popular-artists">&#8249;</button>
+        <div class="popular-artists" id="popular-artists">
+          <div class="artist-card"><img src="arjit.jpeg" alt="Arjit Singh" /><p>Arjit Singh</p></div>
+          <div class="artist-card"><img src="atif.jpeg" alt="Atif Aslam" /><p>Atif Aslam</p></div>
+          <div class="artist-card"><img src="billlie.jpeg" alt="Billie Elish" /><p>Billie Elish</p></div>
+          <div class="artist-card"><img src="ed sherren.jpg" alt="Ed Sheeren" /><p>Ed Sherren</p></div>
+          <div class="artist-card"><img src="taylor-swift.jpg" alt="Taylor Swift" /><p>Taylor Swift</p></div>
+          <div class="artist-card"><img src="kk.jpg" alt="Krishnakumar Kunnath" /><p>Taylor Swift</p></div>
+          <div class="artist-card"><img src="javed.jpeg" alt="Javed Ali" /><p>Taylor Swift</p></div>
+        </div>
+        <button class="scroll-btn right" data-target="popular-artists">&#8250;</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Smooth horizontal scroll for arrow buttons
+    document.querySelectorAll('.scroll-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const targetId = button.getAttribute('data-target');
+        const container = document.getElementById(targetId);
+        const scrollAmount = 200;
+        if (button.classList.contains('left')) {
+          container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
